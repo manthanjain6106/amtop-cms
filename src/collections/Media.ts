@@ -12,5 +12,9 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    staticDir: 'media',
+    mimeTypes: ['image/*'],
+    // When GCS env vars are set, Google Cloud Storage is used (src/config/storage.ts); otherwise local staticDir is used.
+  },
 }
