@@ -42,6 +42,9 @@ next-env.d.ts
 
 /media
 
+# Google Cloud key file (never commit)
+credentials/*.json
+
 # Playwright
 node_modules/
 /test-results/
