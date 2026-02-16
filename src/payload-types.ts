@@ -215,21 +215,10 @@ export interface Post {
    * Short summary shown in blog listing and SEO.
    */
   excerpt?: string | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  /**
+   * Post body in Markdown. Rendered on the blog frontend.
+   */
+  content?: string | null;
   /**
    * Legacy featured image. Prefer "Cover Image" for new posts.
    */

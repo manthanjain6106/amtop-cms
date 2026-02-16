@@ -7,7 +7,6 @@
 import 'dotenv/config'
 import { createPost } from './createPost.js'
 import { getPayloadApiConfig } from './config.js'
-import { textToLexicalRoot } from './lexicalContent.js'
 import { uploadMedia } from './uploadMedia.js'
 
 const DEFAULT_TITLE = 'New post'
@@ -51,7 +50,7 @@ async function main() {
 
   const postPayload = {
     title,
-    content: content ? textToLexicalRoot(content) : undefined,
+    content: content || undefined,
     image: media.id,
     status: 'published' as const,
   }

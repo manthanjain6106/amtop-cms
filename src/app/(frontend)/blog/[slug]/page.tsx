@@ -1,0 +1,67 @@
+import Link from 'next/link'
+import { getPayload } from 'payload'
+import { notFound } from 'next/navigation'
+import React from 'react'
+
+import config from '@/payload.config'
+import { MarkdownContent } from '@/components/MarkdownContent'
+import '../../styles.css'
+
+type Props = { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+  const { docs } = await payload.find({
+    collection: 'posts',
+    where: {
+      and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
+    },
+    limit: 1,
+  })
+  const post = docs[0]
+  if (!post) return { title: 'Post not found' }
+  return {
+    title: post.title,
+    description: post.excerpt ?? undefined,
+  }
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  const { docs } = await payload.find({
+    collection: 'posts',
+    where: {
+      and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
+    },
+    limit: 1,
+  })
+
+  const post = docs[0]
+  if (!post) notFound()
+
+  const content = post.content ?? ''
+
+  return (
+    <article className="blog-post">
+      <header className="blog-post-header">
+        <Link href="/blog" className="blog-back">
+          ← Blog
+        </Link>
+        <h1>{post.title}</h1>
+        {post.publishedAt && (
+          <time dateTime={post.publishedAt}>
+            {new Date(post.publishedAt).toLocaleDateString()}
+          </time>
+        )}
+      </header>
+      <div className="blog-post-body prose">
+        <MarkdownContent content={content} />
+      </div>
+    </article>
+  )
+}

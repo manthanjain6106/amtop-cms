@@ -1,12 +1,11 @@
 import axios from 'axios'
 import type { PayloadApiConfig } from './config.js'
-import type { LexicalRoot } from './lexicalContent.js'
 
 const POSTS_ENDPOINT = '/api/posts'
 
 export type CreatePostPayload = {
   title: string
-  content?: LexicalRoot
+  content?: string
   image?: string
   status: 'draft' | 'published'
 }

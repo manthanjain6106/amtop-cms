@@ -1,26 +1,7 @@
 import type { CollectionConfig } from 'payload'
-import { stringToLexicalRoot } from '@/utils/lexicalContent'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
-  hooks: {
-    afterRead: [
-      ({ doc }) => {
-        if (doc?.content !== undefined && typeof doc.content === 'string') {
-          return { ...doc, content: stringToLexicalRoot(doc.content) }
-        }
-        return doc
-      },
-    ],
-    beforeChange: [
-      ({ data }) => {
-        if (data?.content !== undefined && typeof data.content === 'string') {
-          return { ...data, content: stringToLexicalRoot(data.content) }
-        }
-        return data
-      },
-    ],
-  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'publishedAt', 'updatedAt'],
@@ -52,7 +33,10 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'content',
-      type: 'richText',
+      type: 'textarea',
+      admin: {
+        description: 'Post body in Markdown. Rendered on the blog frontend.',
+      },
     },
     {
       name: 'image',
