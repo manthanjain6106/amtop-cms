@@ -33,7 +33,6 @@
     "next": "15.4.8",
     "payload": "3.51.0",
     "react": "19.1.0",
-    "react-markdown": "^9.0.1",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
     "sharp": "0.34.2"
@@ -70,6 +69,9 @@
     "overrides": {
       "react": "19.1.0",
       "react-dom": "19.1.0"
+    },
+    "patchedDependencies": {
+      "payload@3.51.0": "patches/payload@3.51.0.patch"
     }
   }
 }

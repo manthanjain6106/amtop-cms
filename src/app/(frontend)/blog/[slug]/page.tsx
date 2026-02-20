@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 
 import config from '@/payload.config'
+import { CoverImage } from '@/components/CoverImage'
 import { MarkdownContent } from '@/components/MarkdownContent'
+import { getPostCoverImageAlt, getPostCoverImageUrls } from '@/utils/getPostCoverImage'
 import '../../styles.css'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -19,6 +21,7 @@ export async function generateMetadata({ params }: Props) {
       and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
     },
     limit: 1,
+    depth: 1,
   })
   const post = docs[0]
   if (!post) return { title: 'Post not found' }
@@ -39,12 +42,15 @@ export default async function BlogPostPage({ params }: Props) {
       and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
     },
     limit: 1,
+    depth: 1,
   })
 
   const post = docs[0]
   if (!post) notFound()
 
   const content = post.content ?? ''
+  const { primary: coverUrl, fallback: fallbackUrl } = getPostCoverImageUrls(post)
+  const coverAlt = getPostCoverImageAlt(post)
 
   return (
     <article className="blog-post">
@@ -57,6 +63,14 @@ export default async function BlogPostPage({ params }: Props) {
           <time dateTime={post.publishedAt}>
             {new Date(post.publishedAt).toLocaleDateString()}
           </time>
+        )}
+        {coverUrl && (
+          <CoverImage
+            src={coverUrl}
+            fallbackSrc={fallbackUrl}
+            alt={coverAlt}
+            wrapperClassName="blog-post-cover"
+          />
         )}
       </header>
       <div className="blog-post-body prose">

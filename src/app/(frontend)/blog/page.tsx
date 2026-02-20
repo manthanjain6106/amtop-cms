@@ -3,6 +3,8 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import config from '@/payload.config'
+import { CoverImage } from '@/components/CoverImage'
+import { getPostCoverImageAlt, getPostCoverImageUrls } from '@/utils/getPostCoverImage'
 import '../styles.css'
 
 export const metadata = {
@@ -19,6 +21,7 @@ export default async function BlogPage() {
     where: { status: { equals: 'published' } },
     sort: '-publishedAt',
     limit: 50,
+    depth: 1,
   })
 
   return (
@@ -28,19 +31,31 @@ export default async function BlogPage() {
         <Link href="/">Home</Link>
       </header>
       <ul className="blog-list">
-        {docs.map((post) => (
-          <li key={post.id} className="blog-list-item">
-            <Link href={`/blog/${post.slug ?? post.id}`}>
-              <h2>{post.title}</h2>
-              {post.excerpt && <p className="blog-excerpt">{post.excerpt}</p>}
-              {post.publishedAt && (
-                <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString()}
-                </time>
-              )}
-            </Link>
-          </li>
-        ))}
+        {docs.map((post) => {
+          const { primary: coverUrl, fallback: fallbackUrl } = getPostCoverImageUrls(post)
+          const coverAlt = getPostCoverImageAlt(post)
+          return (
+            <li key={post.id} className="blog-list-item">
+              <Link href={`/blog/${post.slug ?? post.id}`}>
+                {coverUrl && (
+                  <CoverImage
+                    src={coverUrl}
+                    fallbackSrc={fallbackUrl}
+                    alt={coverAlt}
+                    wrapperClassName="blog-list-item-cover"
+                  />
+                )}
+                <h2>{post.title}</h2>
+                {post.excerpt && <p className="blog-excerpt">{post.excerpt}</p>}
+                {post.publishedAt && (
+                  <time dateTime={post.publishedAt}>
+                    {new Date(post.publishedAt).toLocaleDateString()}
+                  </time>
+                )}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
       {docs.length === 0 && <p className="blog-empty">No posts yet.</p>}
     </div>

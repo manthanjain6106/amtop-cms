@@ -1,0 +1,28 @@
+diff --git a/dist/utilities/handleEndpoints.js b/dist/utilities/handleEndpoints.js
+index bec29f72e27686efdf8f514ec2c22674c1c29619..91fa6913a53a155c0825321208707d02b7f12e79 100644
+--- a/dist/utilities/handleEndpoints.js
++++ b/dist/utilities/handleEndpoints.js
+@@ -15,6 +15,14 @@ const notFoundResponse = (req, pathname)=>{
+         status: httpStatus.NOT_FOUND
+     });
+ };
++// Safe decoder for path params: filenames with literal % (e.g. "100%") break decodeURIComponent
++const safeDecodeURIComponent = (str)=>{
++    try {
++        return decodeURIComponent(str);
++    } catch {
++        return str;
++    }
++};
+ /**
+  * Attaches the Payload REST API to any backend framework that uses Fetch Request/Response
+  * like Next.js (app router), Remix, Bun, Hono.
+@@ -145,7 +153,7 @@ const notFoundResponse = (req, pathname)=>{
+                 return false;
+             }
+             const pathMatchFn = match(endpoint.path, {
+-                decode: decodeURIComponent
++                decode: safeDecodeURIComponent
+             });
+             const matchResult = pathMatchFn(adjustedPathname);
+             if (!matchResult) {
