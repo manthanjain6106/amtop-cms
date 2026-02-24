@@ -39,15 +39,6 @@ export const Posts: CollectionConfig = {
       },
     },
     {
-      name: 'image',
-      type: 'upload',
-      relationTo: 'media',
-      required: false,
-      admin: {
-        description: 'Legacy featured image. Prefer "Cover Image" for new posts.',
-      },
-    },
-    {
       name: 'coverImage',
       type: 'upload',
       relationTo: 'media',

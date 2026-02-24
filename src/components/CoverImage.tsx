@@ -5,7 +5,7 @@ import React from 'react'
 type CoverImageProps = {
   /** Primary URL (e.g. from coverImage). */
   src: string
-  /** Fallback URL (e.g. from legacy image) when primary returns 404. */
+  /** Optional fallback URL when primary returns 404. */
   fallbackSrc?: string | null
   alt: string
   className?: string
@@ -15,7 +15,7 @@ type CoverImageProps = {
 
 /**
  * Renders a cover image and tries the fallback URL on error (e.g. 404).
- * Handles posts that have both coverImage and image (legacy) so one can replace the other if missing.
+ * Tries fallbackSrc on error (e.g. 404) when provided.
  */
 export function CoverImage({
   src,

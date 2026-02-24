@@ -25,34 +25,27 @@ function getMediaUrl(media: unknown): string | null {
 }
 
 /**
- * Returns the primary URL for the post's cover image (coverImage preferred, then image).
- * Returns null if no image or relation not populated.
+ * Returns the URL for the post's cover image. Returns null if none or relation not populated.
  */
 export function getPostCoverImageUrl(post: Post): string | null {
-  const media = post.coverImage ?? post.image ?? null
+  const media = post.coverImage ?? null
   if (!media) return null
   return getMediaUrl(media)
 }
 
 /**
- * Returns [primaryUrl, fallbackUrl] for the two cover image types (coverImage and image).
- * Use when you want to try the second if the first returns 404.
- * - primary: coverImage if set, else image
- * - fallback: the other one (only if different from primary)
+ * Returns { primary, fallback } for the post's cover image. Fallback is always null (kept for API compatibility).
  */
 export function getPostCoverImageUrls(post: Post): { primary: string | null; fallback: string | null } {
-  const primaryMedia = post.coverImage ?? post.image ?? null
-  const fallbackMedia = post.coverImage && post.image ? post.image : null
-  const primary = primaryMedia ? getMediaUrl(primaryMedia) : null
-  const fallback = fallbackMedia ? getMediaUrl(fallbackMedia) : null
-  return { primary, fallback: fallback && fallback !== primary ? fallback : null }
+  const primary = getPostCoverImageUrl(post)
+  return { primary, fallback: null }
 }
 
 /**
  * Returns the alt text for the post's cover image, or a fallback.
  */
 export function getPostCoverImageAlt(post: Post): string {
-  const media = (post.coverImage ?? post.image) ?? null
+  const media = post.coverImage ?? null
   if (!media || typeof media !== 'object') return post.title
   const alt = 'alt' in media && typeof media.alt === 'string' ? media.alt : post.title
   return alt

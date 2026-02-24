@@ -220,10 +220,6 @@ export interface Post {
    */
   content?: string | null;
   /**
-   * Legacy featured image. Prefer "Cover Image" for new posts.
-   */
-  image?: (string | null) | Media;
-  /**
    * Featured/cover image shown on the landing page blog.
    */
   coverImage?: (string | null) | Media;
@@ -400,7 +396,6 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   excerpt?: T;
   content?: T;
-  image?: T;
   coverImage?: T;
   author?: T;
   categories?: T;
