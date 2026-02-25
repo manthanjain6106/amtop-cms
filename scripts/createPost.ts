@@ -6,6 +6,9 @@ const POSTS_ENDPOINT = '/api/posts'
 export type CreatePostPayload = {
   title: string
   content?: string
+  /** Media document ID for featured/cover image (preferred). */
+  coverImage?: string
+  /** @deprecated Use coverImage. Kept for backward compatibility. */
   image?: string
   status: 'draft' | 'published'
 }
@@ -19,7 +22,7 @@ export type CreatePostResult = { id: string; doc: Record<string, unknown> }
 
 /**
  * Create a post via Payload REST API.
- * image must be a media document ID (from uploadMedia).
+ * coverImage (or image for backward compatibility) must be a media document ID (from uploadMedia).
  */
 export async function createPost({
   payload,
@@ -37,8 +40,9 @@ export async function createPost({
   if (payload.content != null) {
     body.content = payload.content
   }
-  if (payload.image != null) {
-    body.image = payload.image
+  const coverMediaId = payload.coverImage ?? payload.image
+  if (coverMediaId != null) {
+    body.coverImage = coverMediaId
   }
 
   const response = await axios.post<{ doc: { id: string } & Record<string, unknown> }>(

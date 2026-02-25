@@ -51,7 +51,7 @@ async function main() {
   const postPayload = {
     title,
     content: content || undefined,
-    image: media.id,
+    coverImage: media.id,
     status: 'published' as const,
   }
   const post = await createPost({ payload: postPayload, config })
